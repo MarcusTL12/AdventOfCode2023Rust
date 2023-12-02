@@ -30,7 +30,7 @@ fn part1() {
                 "red" => &mut r,
                 "green" => &mut g,
                 "blue" => &mut b,
-                _ => unreachable!(),
+                _ => panic!(),
             };
 
             *p = n.max(*p);
@@ -64,7 +64,7 @@ fn part2() {
                 "red" => &mut r,
                 "green" => &mut g,
                 "blue" => &mut b,
-                _ => unreachable!(),
+                _ => panic!(),
             };
 
             *p = n.max(*p);
