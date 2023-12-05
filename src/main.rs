@@ -1,10 +1,14 @@
+#![feature(iter_array_chunks)]
+
 mod day1;
 mod day2;
+mod day5;
 
 fn main() {
     let funcs = [
         day1::PARTS,
         day2::PARTS,
+        day5::PARTS,
     ];
     let mut args = std::env::args();
     args.next();
