@@ -1,5 +1,6 @@
 use std::fs::read_to_string;
 
+use arrayvec::ArrayVec;
 use ndarray::{s, ArrayView2};
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
@@ -65,4 +66,72 @@ fn part1(path: &str) {
     println!("{ans}");
 }
 
-fn part2(_path: &str) {}
+fn part2(path: &str) {
+    let input = read_to_string(path).unwrap();
+
+    let grid = parse_input(&input);
+
+    let (h, w) = grid.dim();
+
+    let find_start_of_num = |x: usize, y: usize| {
+        (0..x)
+            .rev()
+            .find(|&x| !grid[[y, x]].is_ascii_digit())
+            .map(|x| x + 1)
+            .unwrap_or(0)
+    };
+
+    let mut ans: u64 = 0;
+
+    for y in 0..h {
+        for x in 0..w {
+            if grid[[y, x]] == b'*' {
+                let mut coords = ArrayVec::<_, 2>::new();
+                let mut too_many = false;
+                for [dx, dy] in [
+                    [1, 0],
+                    [-1, 0],
+                    [0, 1],
+                    [0, -1],
+                    [1, 1],
+                    [-1, 1],
+                    [-1, -1],
+                    [1, -1],
+                ] {
+                    let nx = (x as isize + dx) as usize;
+                    let ny = (y as isize + dy) as usize;
+                    if grid[[ny, nx]].is_ascii_digit() {
+                        let nx = find_start_of_num(nx, ny);
+
+                        if !coords.contains(&[nx, ny])
+                            && coords.try_push([nx, ny]).is_err()
+                        {
+                            too_many = true;
+                            break;
+                        }
+                    }
+                }
+
+                if coords.is_full() && !too_many {
+                    ans += coords
+                        .into_iter()
+                        .map(|[mut x, y]| {
+                            let mut n = 0;
+                            while grid
+                                .get([y, x])
+                                .unwrap_or(&b'.')
+                                .is_ascii_digit()
+                            {
+                                n = 10 * n + (grid[[y, x]] - b'0') as u64;
+                                x += 1;
+                            }
+                            n
+                        })
+                        .product::<u64>();
+                }
+            }
+        }
+    }
+
+    println!("{ans}");
+}
