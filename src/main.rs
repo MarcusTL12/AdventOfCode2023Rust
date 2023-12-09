@@ -1,5 +1,7 @@
 #![feature(iter_array_chunks)]
 
+use home::home_dir;
+
 mod day1;
 mod day2;
 mod day3;
@@ -11,6 +13,10 @@ fn main() {
         day1::PARTS,
         day2::PARTS,
         day3::PARTS,
+        day3::PARTS,
+        day5::PARTS,
+        day5::PARTS,
+        day5::PARTS,
         day5::PARTS,
         day9::PARTS,
     ];
@@ -22,16 +28,23 @@ fn main() {
             println!("===========================");
             let timer = std::time::Instant::now();
             for (i, parts) in funcs.iter().enumerate() {
-                let subtimer = std::time::Instant::now();
+                let path = home_dir()
+                    .unwrap()
+                    .join("aoc-input/2023/")
+                    .join(format!("day{}", i + 1))
+                    .join("input");
+                let path = path.to_str().unwrap();
+
                 println!("---------------------------");
                 println!("Running Day {}", i + 1);
                 println!("Part 1:");
-                parts[0]();
+                let subtimer = std::time::Instant::now();
+                parts[0](path);
                 println!("{:?}\n", subtimer.elapsed());
 
-                let subtimer = std::time::Instant::now();
                 println!("Part 2:");
-                parts[1]();
+                let subtimer = std::time::Instant::now();
+                parts[1](path);
                 println!("{:?}", subtimer.elapsed());
             }
             println!("===========================");
@@ -41,10 +54,18 @@ fn main() {
             if let Ok(x) = x.parse::<usize>() {
                 if let Some(y) = args.next() {
                     if let Ok(y) = y.parse::<usize>() {
-                        if let Some(x) = funcs.get(x - 1) {
-                            if let Some(x) = x.get(y - 1) {
+                        if let Some(f) = funcs.get(x - 1) {
+                            if let Some(f) = f.get(y - 1) {
+                                let path =
+                                    args.next().unwrap_or("input".to_owned());
+                                let path = home_dir()
+                                    .unwrap()
+                                    .join("aoc-input/2023/")
+                                    .join(format!("day{x}"))
+                                    .join(path);
+                                let path = path.to_str().unwrap();
                                 let timer = std::time::Instant::now();
-                                x();
+                                f(path);
                                 println!("Took {:?}", timer.elapsed());
                             } else {
                                 println!("Not implemented");

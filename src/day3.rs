@@ -1,9 +1,8 @@
 use std::fs::read_to_string;
 
-use home::home_dir;
 use ndarray::{s, ArrayView2};
 
-pub const PARTS: [fn(); 2] = [part1, part2];
+pub const PARTS: [fn(&str); 2] = [part1, part2];
 
 fn parse_input(input: &str) -> ArrayView2<u8> {
     let b = input.as_bytes();
@@ -16,10 +15,8 @@ fn parse_input(input: &str) -> ArrayView2<u8> {
         .slice_move(s![0..h, 0..(w - 1)])
 }
 
-fn part1() {
-    let input =
-        read_to_string(home_dir().unwrap().join("aoc-input/2023/day3/ex1"))
-            .unwrap();
+fn part1(path: &str) {
+    let input = read_to_string(path).unwrap();
 
     let _grid = parse_input(&input);
 
@@ -50,4 +47,4 @@ fn part1() {
     // }
 }
 
-fn part2() {}
+fn part2(_path: &str) {}

@@ -1,9 +1,8 @@
 use std::fs::read_to_string;
 
 use arrayvec::ArrayVec;
-use home::home_dir;
 
-pub const PARTS: [fn(); 2] = [part1, part2];
+pub const PARTS: [fn(&str); 2] = [part1, part2];
 
 type Int = isize;
 
@@ -65,22 +64,16 @@ fn find_min_loc<I: Iterator<Item = Int>>(
     seeds.map(|seed| map_number_full(seed, maps)).min().unwrap()
 }
 
-fn part1() {
-    let (seeds, maps) = parse_input(
-        &read_to_string(home_dir().unwrap().join("aoc-input/2023/day5/input"))
-            .unwrap(),
-    );
+fn part1(path: &str) {
+    let (seeds, maps) = parse_input(&read_to_string(path).unwrap());
 
     let ans = find_min_loc(seeds.iter().cloned(), &maps);
 
     println!("{ans}");
 }
 
-fn _part2_brute_force() {
-    let (seeds, maps) = parse_input(
-        &read_to_string(home_dir().unwrap().join("aoc-input/2023/day5/input"))
-            .unwrap(),
-    );
+fn _part2_brute_force(path: &str) {
+    let (seeds, maps) = parse_input(&read_to_string(path).unwrap());
 
     let ans = seeds
         .iter()
@@ -152,11 +145,8 @@ fn map_min(
     min1.min(min2).min(min3)
 }
 
-fn part2() {
-    let (seeds, maps) = parse_input(
-        &read_to_string(home_dir().unwrap().join("aoc-input/2023/day5/input"))
-            .unwrap(),
-    );
+fn part2(path: &str) {
+    let (seeds, maps) = parse_input(&read_to_string(path).unwrap());
 
     let ans = seeds
         .iter()
