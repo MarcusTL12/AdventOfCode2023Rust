@@ -21,33 +21,33 @@ fn part1() {
         read_to_string(home_dir().unwrap().join("aoc-input/2023/day3/ex1"))
             .unwrap();
 
-    let grid = parse_input(&input);
+    let _grid = parse_input(&input);
 
-    let any_symbol = |x: usize, y: usize, dxys: &[[isize; 2]]| {
-        dxys.iter()
-            .map(move |&[dx, dy]| {
-                [(x as isize + dx) as usize, (y as isize + dy) as usize]
-            })
-            .map(|xy| grid.get(xy).unwrap_or(&b'.'))
-            .any(|&c| c == b'.')
-    };
+    // let any_symbol = |x: usize, y: usize, dxys: &[[isize; 2]]| {
+    //     dxys.iter()
+    //         .map(move |&[dx, dy]| {
+    //             [(x as isize + dx) as usize, (y as isize + dy) as usize]
+    //         })
+    //         .map(|xy| grid.get(xy).unwrap_or(&b'.'))
+    //         .any(|&c| c == b'.')
+    // };
 
-    let (h, w) = grid.dim();
+    // let (h, w) = grid.dim();
 
-    for y in 0..h {
-        let mut is_parsing = false;
-        let mut found_symbol = false;
-        let mut num = 0;
+    // for y in 0..h {
+    //     let mut is_parsing = false;
+    //     let mut found_symbol = false;
+    //     let mut num = 0;
 
-        for x in 0..w {
-            let isdigit = grid[[y, x]].is_ascii_digit();
+    //     for x in 0..w {
+    //         let isdigit = grid[[y, x]].is_ascii_digit();
 
-            if !is_parsing && isdigit {
-            } else if is_parsing && isdigit {
-            } else if is_parsing {
-            }
-        }
-    }
+    //         if !is_parsing && isdigit {
+    //         } else if is_parsing && isdigit {
+    //         } else if is_parsing {
+    //         }
+    //     }
+    // }
 }
 
 fn part2() {}
