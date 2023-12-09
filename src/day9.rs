@@ -18,6 +18,10 @@ fn diff_first(xs: &mut [Int]) -> &mut [Int] {
 }
 
 fn extrapolate(xs: &mut [Int]) -> Int {
+    if xs.is_empty() {
+        return 0;
+    }
+
     let &lastnum = xs.last().unwrap();
 
     let dx = diff_first(xs);
@@ -48,28 +52,6 @@ fn part1(path: &str) {
     println!("{ans:?}");
 }
 
-fn diff_last(xs: &mut [Int]) -> &mut [Int] {
-    let l = xs.len();
-
-    for i in (1..l).rev() {
-        xs[i] -= xs[i - 1];
-    }
-
-    &mut xs[1..]
-}
-
-fn extrapolate_back(xs: &mut [Int]) -> Int {
-    let &firstnum = xs.first().unwrap();
-
-    let dx = diff_last(xs);
-
-    if dx.iter().all(|&x| x == 0) {
-        firstnum
-    } else {
-        firstnum - extrapolate_back(dx)
-    }
-}
-
 fn part2(path: &str) {
     let mut buf = Vec::new();
 
@@ -82,7 +64,8 @@ fn part2(path: &str) {
                 l.split_ascii_whitespace()
                     .map(|x| x.parse::<Int>().unwrap()),
             );
-            extrapolate_back(&mut buf)
+            buf.reverse();
+            extrapolate(&mut buf)
         })
         .sum();
 
