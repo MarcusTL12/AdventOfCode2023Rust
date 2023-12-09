@@ -18,33 +18,51 @@ fn parse_input(input: &str) -> ArrayView2<u8> {
 fn part1(path: &str) {
     let input = read_to_string(path).unwrap();
 
-    let _grid = parse_input(&input);
+    let grid = parse_input(&input);
 
-    // let any_symbol = |x: usize, y: usize, dxys: &[[isize; 2]]| {
-    //     dxys.iter()
-    //         .map(move |&[dx, dy]| {
-    //             [(x as isize + dx) as usize, (y as isize + dy) as usize]
-    //         })
-    //         .map(|xy| grid.get(xy).unwrap_or(&b'.'))
-    //         .any(|&c| c == b'.')
-    // };
+    let any_symbol = |x: usize, y: usize, dxys: &[[isize; 2]]| {
+        dxys.iter()
+            .map(move |&[dx, dy]| {
+                [(y as isize + dy) as usize, (x as isize + dx) as usize]
+            })
+            .map(|xy| grid.get(xy).unwrap_or(&b'.'))
+            .any(|&c| c != b'.')
+    };
 
-    // let (h, w) = grid.dim();
+    let (h, w) = grid.dim();
 
-    // for y in 0..h {
-    //     let mut is_parsing = false;
-    //     let mut found_symbol = false;
-    //     let mut num = 0;
+    let mut ans = 0;
 
-    //     for x in 0..w {
-    //         let isdigit = grid[[y, x]].is_ascii_digit();
+    for y in 0..h {
+        let mut is_parsing = false;
+        let mut found_symbol = false;
+        let mut num = 0;
 
-    //         if !is_parsing && isdigit {
-    //         } else if is_parsing && isdigit {
-    //         } else if is_parsing {
-    //         }
-    //     }
-    // }
+        for x in 0..w {
+            let isdigit = grid[[y, x]].is_ascii_digit();
+
+            if !is_parsing && isdigit {
+                is_parsing = true;
+                found_symbol = any_symbol(
+                    x,
+                    y,
+                    &[[-1, 0], [-1, 1], [-1, -1], [0, -1], [0, 1]],
+                );
+                num = (grid[[y, x]] - b'0') as u64;
+            } else if is_parsing && isdigit {
+                found_symbol |= any_symbol(x, y, &[[0, -1], [0, 1]]);
+                num = 10 * num + (grid[[y, x]] - b'0') as u64;
+            } else if is_parsing {
+                found_symbol |= any_symbol(x, y, &[[0, -1], [0, 1], [0, 0]]);
+                if found_symbol {
+                    ans += num;
+                }
+                is_parsing = false;
+            }
+        }
+    }
+
+    println!("{ans}");
 }
 
 fn part2(_path: &str) {}
