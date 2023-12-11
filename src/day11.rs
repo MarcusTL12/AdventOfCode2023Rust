@@ -1,6 +1,6 @@
 use std::fs::read_to_string;
 
-use ndarray::{s, ArrayView1, ArrayView2};
+use ndarray::{s, ArrayView2};
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
 
@@ -15,14 +15,18 @@ fn parse_input(input: &str) -> ArrayView2<u8> {
         .slice_move(s![0..h, 0..(w - 1)])
 }
 
-fn get_galaxy_coords<'a, I: Iterator<Item = ArrayView1<'a, u8>>>(
+fn get_galaxy_coords<
+    'a,
+    I2: IntoIterator<Item = &'a u8> + Copy,
+    I: Iterator<Item = I2>,
+>(
     col_iter: I,
     expand: usize,
 ) -> Vec<usize> {
     col_iter
         .scan(0, |x, col| {
             *x += 1;
-            if col.iter().all(|&c| c == b'.') {
+            if col.into_iter().all(|&c| c == b'.') {
                 *x += expand;
             }
             Some((*x, col))
