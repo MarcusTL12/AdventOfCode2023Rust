@@ -61,6 +61,10 @@ fn part1(path: &str) {
                 is_parsing = false;
             }
         }
+
+        if is_parsing && found_symbol {
+            ans += num;
+        }
     }
 
     println!("{ans}");
