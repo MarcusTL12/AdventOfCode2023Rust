@@ -4,7 +4,7 @@ use std::{
     hash::{DefaultHasher, Hash, Hasher},
 };
 
-use ndarray::{s, Array2, ArrayView2, ArrayViewMut2};
+use ndarray::{s, Array2, ArrayView2, ArrayViewMut1, ArrayViewMut2};
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
 
@@ -21,24 +21,32 @@ fn parse_input_mut(input: &str) -> Array2<u8> {
         .slice_move(s![0..h, 0..(w - 1)])
 }
 
-fn fall_up(mut grid: ArrayViewMut2<u8>) {
-    let (h, w) = grid.dim();
+fn fall_up_col(mut col: ArrayViewMut1<u8>) {
+    let mut n = 0;
 
-    let mut done = false;
-
-    while !done {
-        done = true;
-
-        for y in 1..h {
-            for x in 0..w {
-                if grid[[y, x]] == b'O' && grid[[y - 1, x]] == b'.' {
-                    done = false;
-                    grid[[y, x]] = b'.';
-                    grid[[y - 1, x]] = b'O';
-                }
+    for i in (0..col.len()).rev() {
+        match col[i] {
+            b'O' => {
+                n += 1;
+                col[i] = b'.';
             }
+            b'#' => {
+                for j in (i + 1)..(i + 1 + n) {
+                    col[j] = b'O';
+                }
+                n = 0;
+            }
+            _ => {}
         }
     }
+
+    for j in 0..n {
+        col[j] = b'O';
+    }
+}
+
+fn fall_up(mut grid: ArrayViewMut2<u8>) {
+    grid.columns_mut().into_iter().for_each(fall_up_col);
 }
 
 fn calc_load(grid: ArrayView2<u8>) -> usize {
