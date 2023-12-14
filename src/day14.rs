@@ -4,7 +4,10 @@ use std::{
     hash::{DefaultHasher, Hash, Hasher},
 };
 
-use ndarray::{s, ArrayView2, ArrayViewMut1, ArrayViewMut2};
+use ndarray::{
+    parallel::prelude::{IntoParallelIterator, ParallelIterator},
+    s, ArrayView2, ArrayViewMut1, ArrayViewMut2, Axis,
+};
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
 
@@ -44,7 +47,9 @@ fn fall_up_col(mut col: ArrayViewMut1<u8>) {
 }
 
 fn fall_up(mut grid: ArrayViewMut2<u8>) {
-    grid.columns_mut().into_iter().for_each(fall_up_col);
+    grid.axis_iter_mut(Axis(1))
+        .into_par_iter()
+        .for_each(fall_up_col);
 }
 
 fn calc_load(grid: ArrayView2<u8>) -> usize {
