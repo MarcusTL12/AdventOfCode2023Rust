@@ -4,19 +4,17 @@ use std::{
     hash::{DefaultHasher, Hash, Hasher},
 };
 
-use ndarray::{s, Array2, ArrayView2, ArrayViewMut1, ArrayViewMut2};
+use ndarray::{s, ArrayView2, ArrayViewMut1, ArrayViewMut2};
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
 
-fn parse_input_mut(input: &str) -> Array2<u8> {
-    let b = input.as_bytes();
+fn parse_input_mut(input: &mut str) -> ArrayViewMut2<u8> {
+    let b = unsafe { input.as_bytes_mut() };
 
     let w = b.split(|&x| x == b'\n').next().unwrap().len() + 1;
     let h = b.len() / w;
 
-    let b = b[0..w * h].to_vec();
-
-    Array2::from_shape_vec((h, w), b)
+    ArrayViewMut2::from_shape((h, w), b)
         .unwrap()
         .slice_move(s![0..h, 0..(w - 1)])
 }
@@ -60,9 +58,9 @@ fn calc_load(grid: ArrayView2<u8>) -> usize {
 }
 
 fn part1(path: &str) {
-    let input = read_to_string(path).unwrap();
+    let mut input = read_to_string(path).unwrap();
 
-    let mut grid = parse_input_mut(&input);
+    let mut grid = parse_input_mut(&mut input);
 
     fall_up(grid.view_mut());
 
@@ -85,9 +83,9 @@ fn calculate_hash<T: Hash>(t: &T) -> u64 {
 }
 
 fn part2(path: &str) {
-    let input = read_to_string(path).unwrap();
+    let mut input = read_to_string(path).unwrap();
 
-    let mut grid = parse_input_mut(&input);
+    let mut grid = parse_input_mut(&mut input);
 
     let mut seen = HashMap::new();
 
