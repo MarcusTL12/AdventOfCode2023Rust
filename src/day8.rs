@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs::read_to_string};
+use std::collections::HashMap;
 
 use arrayvec::ArrayVec;
 use num_integer::lcm;
@@ -35,10 +35,8 @@ fn parse_input(input: &str) -> (&str, HashMap<&str, [&str; 2]>) {
     (firstline, map)
 }
 
-fn part1(path: &str) {
-    let input = read_to_string(path).unwrap();
-
-    let (path, map) = parse_input(&input);
+fn part1(input: &str) {
+    let (path, map) = parse_input(input);
 
     let ans = path
         .chars()
@@ -63,10 +61,8 @@ fn part1(path: &str) {
     println!("{ans}");
 }
 
-fn part2(path: &str) {
-    let input = read_to_string(path).unwrap();
-
-    let (path, map) = parse_input(&input);
+fn part2(input: &str) {
+    let (path, map) = parse_input(input);
 
     let ans = map
         .keys()

@@ -1,25 +1,19 @@
-use std::{
-    fs::File,
-    io::{BufRead, BufReader},
-};
-
 use regex::Regex;
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
 
-fn part1(path: &str) {
+fn part1(input: &str) {
     let reg = Regex::new(r"(\d+) (\w+)").unwrap();
 
-    let ans: usize = BufReader::new(File::open(path).unwrap())
+    let ans: usize = input
         .lines()
-        .map(|l| l.unwrap())
         .enumerate()
         .filter_map(|(id, l)| {
             let mut r = 0;
             let mut g = 0;
             let mut b = 0;
 
-            for c in reg.captures_iter(&l) {
+            for c in reg.captures_iter(l) {
                 let n: usize = c[1].parse().unwrap();
 
                 let p = match &c[2] {
@@ -39,18 +33,17 @@ fn part1(path: &str) {
     println!("{}", ans);
 }
 
-fn part2(path: &str) {
+fn part2(input: &str) {
     let reg = Regex::new(r"(\d+) (\w+)").unwrap();
 
-    let ans: usize = BufReader::new(File::open(path).unwrap())
+    let ans: usize = input
         .lines()
-        .map(|l| l.unwrap())
         .map(|l| {
             let mut r = 0;
             let mut g = 0;
             let mut b = 0;
 
-            for c in reg.captures_iter(&l) {
+            for c in reg.captures_iter(l) {
                 let n: usize = c[1].parse().unwrap();
 
                 let p = match &c[2] {

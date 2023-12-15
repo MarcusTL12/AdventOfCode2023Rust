@@ -1,14 +1,8 @@
-use std::{
-    fs::File,
-    io::{BufRead, BufReader},
-};
-
 pub const PARTS: [fn(&str); 2] = [part1, part2];
 
-fn part1(path: &str) {
-    let ans: u64 = BufReader::new(File::open(path).unwrap())
+fn part1(input: &str) {
+    let ans: u64 = input
         .lines()
-        .map(|l| l.unwrap())
         .map(|l| {
             let d1 = l.chars().find(|c| c.is_numeric()).unwrap() as u8 - b'0';
             let d2 = l.chars().filter(|c| c.is_numeric()).last().unwrap() as u8
@@ -21,14 +15,13 @@ fn part1(path: &str) {
     println!("{}", ans);
 }
 
-fn part2(path: &str) {
+fn part2(input: &str) {
     let numbers = [
         "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
     ];
 
-    let ans: u64 = BufReader::new(File::open(path).unwrap())
+    let ans: u64 = input
         .lines()
-        .map(|l| l.unwrap())
         .map(|l| {
             let d1 = (0..=l.len())
                 .find_map(|i| {

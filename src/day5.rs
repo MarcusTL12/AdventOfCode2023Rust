@@ -1,5 +1,3 @@
-use std::fs::read_to_string;
-
 use arrayvec::ArrayVec;
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
@@ -64,16 +62,16 @@ fn find_min_loc<I: Iterator<Item = Int>>(
     seeds.map(|seed| map_number_full(seed, maps)).min().unwrap()
 }
 
-fn part1(path: &str) {
-    let (seeds, maps) = parse_input(&read_to_string(path).unwrap());
+fn part1(input: &str) {
+    let (seeds, maps) = parse_input(input);
 
     let ans = find_min_loc(seeds.iter().cloned(), &maps);
 
     println!("{ans}");
 }
 
-fn _part2_brute_force(path: &str) {
-    let (seeds, maps) = parse_input(&read_to_string(path).unwrap());
+fn _part2_brute_force(input: &str) {
+    let (seeds, maps) = parse_input(input);
 
     let ans = seeds
         .iter()
@@ -145,8 +143,8 @@ fn map_min(
     min1.min(min2).min(min3)
 }
 
-fn part2(path: &str) {
-    let (seeds, maps) = parse_input(&read_to_string(path).unwrap());
+fn part2(input: &str) {
+    let (seeds, maps) = parse_input(input);
 
     let ans = seeds
         .iter()

@@ -1,5 +1,3 @@
-use std::fs::read_to_string;
-
 use ndarray::{s, Array2, ArrayView2};
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
@@ -35,9 +33,7 @@ fn find_mirror_plane(grid: ArrayView2<u8>) -> Option<usize> {
     (1..grid.dim().0).find(|&i| has_mirror_at(grid, i))
 }
 
-fn part1(path: &str) {
-    let input = read_to_string(path).unwrap();
-
+fn part1(input: &str) {
     let ans: usize = input
         .split_inclusive("\n\n")
         .map(parse_input)
@@ -112,9 +108,7 @@ fn look_for_smudge(mut grid: Array2<u8>) -> usize {
     panic!()
 }
 
-fn part2(path: &str) {
-    let input = read_to_string(path).unwrap();
-
+fn part2(input: &str) {
     let ans: usize = input
         .split_inclusive("\n\n")
         .map(parse_input_mut)

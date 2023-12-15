@@ -1,6 +1,5 @@
 use std::{
     collections::HashMap,
-    fs::read_to_string,
     hash::{DefaultHasher, Hash, Hasher},
 };
 
@@ -62,8 +61,8 @@ fn calc_load(grid: ArrayView2<u8>) -> usize {
         .sum()
 }
 
-fn part1(path: &str) {
-    let mut input = read_to_string(path).unwrap();
+fn part1(input: &str) {
+    let mut input = input.to_owned();
 
     let mut grid = parse_input_mut(&mut input);
 
@@ -87,8 +86,8 @@ fn calculate_hash<T: Hash>(t: &T) -> u64 {
     s.finish()
 }
 
-fn part2(path: &str) {
-    let mut input = read_to_string(path).unwrap();
+fn part2(input: &str) {
+    let mut input = input.to_owned();
 
     let mut grid = parse_input_mut(&mut input);
 

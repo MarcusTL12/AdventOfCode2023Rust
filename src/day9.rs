@@ -1,8 +1,3 @@
-use std::{
-    fs::File,
-    io::{BufRead, BufReader},
-};
-
 pub const PARTS: [fn(&str); 2] = [part1, part2];
 
 type Int = i64;
@@ -33,12 +28,11 @@ fn extrapolate(xs: &mut [Int]) -> Int {
     }
 }
 
-fn part1(path: &str) {
+fn part1(input: &str) {
     let mut buf = Vec::new();
 
-    let ans: Int = BufReader::new(File::open(path).unwrap())
+    let ans: Int = input
         .lines()
-        .map(|l| l.unwrap())
         .map(|l| {
             buf.clear();
             buf.extend(
@@ -52,12 +46,11 @@ fn part1(path: &str) {
     println!("{ans:?}");
 }
 
-fn part2(path: &str) {
+fn part2(input: &str) {
     let mut buf = Vec::new();
 
-    let ans: Int = BufReader::new(File::open(path).unwrap())
+    let ans: Int = input
         .lines()
-        .map(|l| l.unwrap())
         .map(|l| {
             buf.clear();
             buf.extend(

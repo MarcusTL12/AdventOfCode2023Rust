@@ -1,8 +1,4 @@
-use std::{
-    collections::HashMap,
-    fs::File,
-    io::{BufRead, BufReader},
-};
+use std::collections::HashMap;
 
 use arrayvec::ArrayVec;
 
@@ -59,13 +55,12 @@ fn find_num_ways(
     a + b
 }
 
-fn part1(path: &str) {
+fn part1(input: &str) {
     let mut nums_buf = Vec::new();
     let mut memo = HashMap::new();
 
-    let ans: usize = BufReader::new(File::open(path).unwrap())
+    let ans: usize = input
         .lines()
-        .map(|l| l.unwrap())
         .map(|l| {
             let [line, nums] = l
                 .split_ascii_whitespace()
@@ -85,15 +80,14 @@ fn part1(path: &str) {
     println!("{ans}");
 }
 
-fn part2(path: &str) {
+fn part2(input: &str) {
     let mut nums_buf = Vec::new();
     let mut nums_buf2 = Vec::new();
     let mut linebuf = Vec::new();
     let mut memo = HashMap::new();
 
-    let ans: usize = BufReader::new(File::open(path).unwrap())
+    let ans: usize = input
         .lines()
-        .map(|l| l.unwrap())
         .map(|l| {
             let [line, nums] = l
                 .split_ascii_whitespace()

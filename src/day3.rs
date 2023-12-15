@@ -1,5 +1,3 @@
-use std::fs::read_to_string;
-
 use arrayvec::ArrayVec;
 use ndarray::{s, ArrayView2};
 
@@ -16,10 +14,8 @@ fn parse_input(input: &str) -> ArrayView2<u8> {
         .slice_move(s![0..h, 0..(w - 1)])
 }
 
-fn part1(path: &str) {
-    let input = read_to_string(path).unwrap();
-
-    let grid = parse_input(&input);
+fn part1(input: &str) {
+    let grid = parse_input(input);
 
     let any_symbol = |x: usize, y: usize, dxys: &[[isize; 2]]| {
         dxys.iter()
@@ -70,10 +66,8 @@ fn part1(path: &str) {
     println!("{ans}");
 }
 
-fn part2(path: &str) {
-    let input = read_to_string(path).unwrap();
-
-    let grid = parse_input(&input);
+fn part2(input: &str) {
+    let grid = parse_input(input);
 
     let (h, w) = grid.dim();
 

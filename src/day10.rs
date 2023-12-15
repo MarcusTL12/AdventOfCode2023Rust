@@ -1,5 +1,3 @@
-use std::fs::read_to_string;
-
 use arrayvec::ArrayVec;
 use ndarray::{s, Array2, ArrayView2};
 
@@ -51,9 +49,8 @@ fn do_step(
     )
 }
 
-fn part1(path: &str) {
-    let input = read_to_string(path).unwrap();
-    let grid = parse_input(&input);
+fn part1(input: &str) {
+    let grid = parse_input(input);
 
     let [sy, sx] = find_start(&grid);
 
@@ -90,9 +87,8 @@ fn rot_dir(d: [isize; 2]) -> [isize; 2] {
     [d[1], -d[0]]
 }
 
-fn part2(path: &str) {
-    let input = read_to_string(path).unwrap();
-    let grid = parse_input(&input);
+fn part2(input: &str) {
+    let grid = parse_input(input);
 
     let mut pos = find_start(&grid);
     let [sy, sx] = &pos;

@@ -1,6 +1,7 @@
 #![feature(iter_array_chunks)]
 
 use home::home_dir;
+use std::fs::read_to_string;
 
 mod day1;
 mod day10;
@@ -49,18 +50,18 @@ fn main() {
                     .join("aoc-input/2023/")
                     .join(format!("day{}", i + 1))
                     .join("input");
-                let path = path.to_str().unwrap();
+                let input = read_to_string(path).unwrap();
 
                 println!("---------------------------");
                 println!("Running Day {}", i + 1);
                 println!("Part 1:");
                 let subtimer = std::time::Instant::now();
-                parts[0](path);
+                parts[0](&input);
                 println!("{:?}\n", subtimer.elapsed());
 
                 println!("Part 2:");
                 let subtimer = std::time::Instant::now();
-                parts[1](path);
+                parts[1](&input);
                 println!("{:?}", subtimer.elapsed());
             }
             println!("===========================");
@@ -79,9 +80,9 @@ fn main() {
                                     .join("aoc-input/2023/")
                                     .join(format!("day{x}"))
                                     .join(path);
-                                let path = path.to_str().unwrap();
+                                let input = read_to_string(path).unwrap();
                                 let timer = std::time::Instant::now();
-                                f(path);
+                                f(&input);
                                 println!("Took {:?}", timer.elapsed());
                             } else {
                                 println!("Not implemented");

@@ -1,5 +1,3 @@
-use std::fs::read_to_string;
-
 use arrayvec::ArrayVec;
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
@@ -9,18 +7,16 @@ fn hash(s: &str) -> u8 {
         .fold(0, |curval, c| ((curval as u16 + c as u16) * 17) as u8)
 }
 
-fn part1(path: &str) {
-    let inp = read_to_string(path).unwrap();
-    let inp = inp.split_ascii_whitespace().next().unwrap();
+fn part1(input: &str) {
+    let input = input.split_ascii_whitespace().next().unwrap();
 
-    let ans: u32 = inp.split(',').map(hash).map(|x| x as u32).sum();
+    let ans: u32 = input.split(',').map(hash).map(|x| x as u32).sum();
 
     println!("{ans}");
 }
 
-fn part2(path: &str) {
-    let inp = read_to_string(path).unwrap();
-    let inp = inp.split_ascii_whitespace().next().unwrap();
+fn part2(input: &str) {
+    let inp = input.split_ascii_whitespace().next().unwrap();
 
     let mut boxes = [0; 256].map(|_| Vec::new());
 

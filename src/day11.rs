@@ -1,5 +1,3 @@
-use std::fs::read_to_string;
-
 use ndarray::{s, ArrayView2};
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
@@ -54,9 +52,8 @@ fn get_sum_dists(coords: &[usize]) -> usize {
         .sum()
 }
 
-fn find_tot_dist(path: &str, expand: usize) -> usize {
-    let input = read_to_string(path).unwrap();
-    let grid = parse_input(&input);
+fn find_tot_dist(input: &str, expand: usize) -> usize {
+    let grid = parse_input(input);
 
     let galaxy_xs = get_galaxy_coords(grid.columns().into_iter(), expand);
     let galaxy_ys = get_galaxy_coords(grid.rows().into_iter(), expand);
@@ -64,10 +61,10 @@ fn find_tot_dist(path: &str, expand: usize) -> usize {
     get_sum_dists(&galaxy_xs) + get_sum_dists(&galaxy_ys)
 }
 
-fn part1(path: &str) {
-    println!("{}", find_tot_dist(path, 1));
+fn part1(input: &str) {
+    println!("{}", find_tot_dist(input, 1));
 }
 
-fn part2(path: &str) {
-    println!("{}", find_tot_dist(path, 1000000 - 1));
+fn part2(input: &str) {
+    println!("{}", find_tot_dist(input, 1000000 - 1));
 }

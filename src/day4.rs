@@ -1,18 +1,12 @@
-use std::{
-    fs::File,
-    io::{BufRead, BufReader},
-};
-
 use arrayvec::ArrayVec;
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
 
-fn part1(path: &str) {
+fn part1(input: &str) {
     let mut buf = Vec::new();
 
-    let ans: u64 = BufReader::new(File::open(path).unwrap())
+    let ans: u64 = input
         .lines()
-        .map(|l| l.unwrap())
         .map(|l| {
             let l = l.split(": ").nth(1).unwrap();
             let [first, second] = l
@@ -43,16 +37,12 @@ fn part1(path: &str) {
     println!("{ans}");
 }
 
-fn part2(path: &str) {
+fn part2(input: &str) {
     let mut buf = Vec::new();
 
     let mut n_cards = Vec::new();
 
-    for (i, l) in BufReader::new(File::open(path).unwrap())
-        .lines()
-        .map(|l| l.unwrap())
-        .enumerate()
-    {
+    for (i, l) in input.lines().enumerate() {
         let l = l.split(": ").nth(1).unwrap();
         let [first, second] = l
             .split(" | ")

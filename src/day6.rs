@@ -1,5 +1,3 @@
-use std::fs::read_to_string;
-
 use arrayvec::ArrayVec;
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
@@ -16,9 +14,7 @@ fn get_num_ways(t: u64, d: u64) -> u64 {
     n
 }
 
-fn part1(path: &str) {
-    let input = read_to_string(path).unwrap();
-
+fn part1(input: &str) {
     let [times, dists] = input
         .lines()
         .map(|l| {
@@ -42,9 +38,7 @@ fn part1(path: &str) {
     println!("{ans}");
 }
 
-fn part2(path: &str) {
-    let input = read_to_string(path).unwrap();
-
+fn part2(input: &str) {
     let [time, dist] = input
         .lines()
         .map(|l| {

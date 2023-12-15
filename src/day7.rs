@@ -1,8 +1,4 @@
-use std::{
-    cmp::Reverse,
-    fs::File,
-    io::{BufRead, BufReader},
-};
+use std::cmp::Reverse;
 
 use arrayvec::ArrayVec;
 use num_derive::FromPrimitive;
@@ -72,10 +68,9 @@ fn find_hand_type(counts: [usize; 13]) -> usize {
     }
 }
 
-fn part1(path: &str) {
-    let mut hands: Vec<_> = BufReader::new(File::open(path).unwrap())
+fn part1(input: &str) {
+    let mut hands: Vec<_> = input
         .lines()
-        .map(|l| l.unwrap())
         .map(|l| {
             let [hand_str, bet_str] = l
                 .split_ascii_whitespace()
@@ -172,10 +167,9 @@ fn find_hand_type2(hand: [Card2; 5]) -> usize {
     find_type_rec(n_j, &mut counts)
 }
 
-fn part2(path: &str) {
-    let mut hands: Vec<_> = BufReader::new(File::open(path).unwrap())
+fn part2(input: &str) {
+    let mut hands: Vec<_> = input
         .lines()
-        .map(|l| l.unwrap())
         .map(|l| {
             let [hand_str, bet_str] = l
                 .split_ascii_whitespace()
