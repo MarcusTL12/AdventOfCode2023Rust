@@ -1,4 +1,5 @@
 #![feature(iter_array_chunks)]
+#![feature(iter_map_windows)]
 
 use home::home_dir;
 use std::fs::read_to_string;
@@ -12,6 +13,7 @@ mod day14;
 mod day15;
 mod day16;
 mod day17;
+mod day18;
 mod day2;
 mod day3;
 mod day4;
@@ -40,6 +42,7 @@ fn main() {
         day15::PARTS,
         day16::PARTS,
         day17::PARTS,
+        day18::PARTS,
     ];
     let mut args = std::env::args();
     args.next();
