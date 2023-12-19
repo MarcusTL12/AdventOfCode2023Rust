@@ -14,6 +14,7 @@ mod day15;
 mod day16;
 mod day17;
 mod day18;
+mod day19;
 mod day2;
 mod day3;
 mod day4;
@@ -43,6 +44,7 @@ fn main() {
         day16::PARTS,
         day17::PARTS,
         day18::PARTS,
+        day19::PARTS,
     ];
     let mut args = std::env::args();
     args.next();
