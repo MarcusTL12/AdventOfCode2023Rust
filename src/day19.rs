@@ -200,13 +200,12 @@ fn num_accepted<const N: usize>(
         .rules
         .iter()
         .filter_map(|rule| {
-            part.map(|part_range| {
+            part.and_then(|part_range| {
                 let [mapped_range, rest_range] = rule.map_range(part_range);
                 part = rest_range;
 
                 mapped_range
                     .map(|range| num_accepted(workflows, rule.dest, range))
-                    .unwrap_or(0)
             })
         })
         .sum::<usize>()
