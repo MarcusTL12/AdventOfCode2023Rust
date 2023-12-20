@@ -67,14 +67,7 @@ fn pushbutton<'a, const IN: usize, const OUT: usize>(
     let mut n_high = 0;
 
     while let Some(([from, to], pulse)) = pulsequeue.pop_front() {
-        // dbg!(from, to, pulse);
-        // println!();
-
-        if pulse {
-            n_high += 1;
-        } else {
-            n_low += 1;
-        }
+        *if pulse { &mut n_high } else { &mut n_low } += 1;
 
         if let Some((state, outputs)) = modules.get_mut(to) {
             match state {
