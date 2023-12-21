@@ -1,16 +1,20 @@
-use std::collections::{HashMap, VecDeque};
+use std::{
+    collections::{HashMap, VecDeque},
+    hash::{DefaultHasher, Hash, Hasher},
+};
 
 use arrayvec::ArrayVec;
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
 
-#[derive(Debug)]
+#[derive(Debug, Hash)]
 enum ModuleState<'a, const N: usize> {
     FlipFlop(bool),
     Conjunction(ArrayVec<(&'a str, bool), N>),
     Broadcaster,
 }
 
+use num_integer::lcm;
 use ModuleState::*;
 
 fn parse_input<const IN: usize, const OUT: usize>(
@@ -122,4 +126,82 @@ fn part1(input: &str) {
     println!("{ans}");
 }
 
-fn part2(_input: &str) {}
+fn partition_input<'a, const IN: usize, const OUT: usize>(
+    modules: &HashMap<&str, (ModuleState<IN>, ArrayVec<&'a str, OUT>)>,
+) -> Vec<Vec<&'a str>> {
+    let &rx_inp = modules
+        .iter()
+        .find_map(|(k, v)| v.1.contains(&"rx").then_some(k))
+        .unwrap();
+
+    let mut stk = Vec::new();
+
+    modules["broadcaster"]
+        .1
+        .iter()
+        .map(|&name| {
+            stk.push(name);
+            let mut names = Vec::new();
+            names.push(name);
+            while let Some(name) = stk.pop() {
+                for &outname in &modules[name].1 {
+                    if outname != rx_inp && !names.contains(&outname) {
+                        stk.push(outname);
+                        names.push(outname);
+                    }
+                }
+            }
+            names
+        })
+        .collect()
+}
+
+fn get_state_hash<const IN: usize, const OUT: usize>(
+    modules: &HashMap<&str, (ModuleState<IN>, ArrayVec<&str, OUT>)>,
+    partition: &[&str],
+) -> u64 {
+    let mut s = DefaultHasher::new();
+
+    for name in partition {
+        modules[name].0.hash(&mut s);
+    }
+
+    s.finish()
+}
+
+fn part2(input: &str) {
+    let mut modules = parse_input::<10, 8>(input);
+    let mut pulsequeue = VecDeque::new();
+
+    let partitions = partition_input(&modules);
+
+    let mut seen_states = vec![HashMap::new(); partitions.len()];
+    let mut cycles = vec![None; partitions.len()];
+
+    for i in 0.. {
+        if !cycles.iter().any(|x| x.is_none()) {
+            break;
+        }
+
+        pushbutton(&mut modules, &mut pulsequeue);
+
+        for ((partition, seen), cycle) in
+            partitions.iter().zip(&mut seen_states).zip(&mut cycles)
+        {
+            let state = get_state_hash(&modules, partition);
+            if let Some(&j) = seen.get(&state) {
+                *cycle = Some((j, i));
+            } else {
+                seen.insert(state, i);
+            }
+        }
+    }
+
+    let ans: u64 = cycles
+        .into_iter()
+        .map(|x| x.unwrap())
+        .map(|(start, stop)| stop - start)
+        .fold(1, lcm);
+
+    println!("{ans}");
+}
