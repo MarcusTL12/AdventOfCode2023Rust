@@ -175,7 +175,7 @@ fn part2(input: &str) {
 
     let partitions = partition_input(&modules);
 
-    let mut seen_states = vec![HashMap::new(); partitions.len()];
+    let mut seen_states = HashMap::new();
     let mut cycles = vec![None; partitions.len()];
 
     for i in 0.. {
@@ -185,14 +185,12 @@ fn part2(input: &str) {
 
         pushbutton(&mut modules, &mut pulsequeue);
 
-        for ((partition, seen), cycle) in
-            partitions.iter().zip(&mut seen_states).zip(&mut cycles)
-        {
+        for (partition, cycle) in partitions.iter().zip(&mut cycles) {
             let state = get_state_hash(&modules, partition);
-            if let Some(&j) = seen.get(&state) {
+            if let Some(&j) = seen_states.get(&state) {
                 *cycle = Some((j, i));
             } else {
-                seen.insert(state, i);
+                seen_states.insert(state, i);
             }
         }
     }
