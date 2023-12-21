@@ -12,6 +12,7 @@ dependencies = [
  "num-derive",
  "num-integer",
  "num-traits",
+ "polynomial",
  "priority-queue",
  "regex",
 ]
@@ -182,6 +183,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39e3200413f237f41ab11ad6d161bc7239c84dcb631773ccd7de3dfe4b5c267c"
 dependencies = [
  "autocfg",
+]
+
+[[package]]
+name = "polynomial"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "27abb6e4638dcecc65a92b50d7f1d87dd6dea987ba71db987b6bf881f4877e9d"
+dependencies = [
+ "num-traits",
 ]
 
 [[package]]

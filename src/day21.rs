@@ -1,6 +1,7 @@
 use std::collections::{HashMap, VecDeque};
 
 use ndarray::ArrayView2;
+use polynomial::Polynomial;
 
 use crate::parse_grid::parse_grid;
 
@@ -11,6 +12,10 @@ fn find_plots(
     startpos: [usize; 2],
     steps: usize,
 ) -> usize {
+    let (w, h) = grid.dim();
+
+    let startpos = startpos.map(|q| q as isize);
+
     let mut queue = VecDeque::new();
     let mut seen = HashMap::new();
     queue.push_back((startpos, 0));
@@ -18,14 +23,16 @@ fn find_plots(
 
     while let Some(([x, y], l)) = queue.pop_front() {
         for [dx, dy] in [[1, 0], [0, 1], [-1, 0], [0, -1]] {
-            let nx = (x as isize + dx) as usize;
-            let ny = (y as isize + dy) as usize;
+            let nx = x + dx;
+            let ny = y + dy;
 
             let npos = [nx, ny];
+            let npos_mod = [
+                nx.rem_euclid(w as isize) as usize,
+                ny.rem_euclid(h as isize) as usize,
+            ];
 
-            if grid.get(npos).unwrap_or(&b'#') != &b'#'
-                && !seen.contains_key(&npos)
-                && l < steps
+            if grid[npos_mod] != b'#' && !seen.contains_key(&npos) && l < steps
             {
                 queue.push_back((npos, l + 1));
                 seen.insert(npos, l + 1);
@@ -46,4 +53,22 @@ fn part1(input: &str) {
     println!("{ans}");
 }
 
-fn part2(_input: &str) {}
+fn part2(input: &str) {
+    let grid = parse_grid(input);
+
+    let (w, _) = grid.dim();
+
+    let n_steps_total = 26501365;
+
+    let xs = [0, 1, 2];
+    let ys = xs.map(|nw| {
+        find_plots(&grid, [w / 2, w / 2], n_steps_total % w + w * (nw as usize))
+            as i64
+    });
+
+    let poly = Polynomial::lagrange(&xs, &ys).unwrap();
+
+    let ans = poly.eval((n_steps_total / w) as i64);
+
+    println!("{ans}");
+}
