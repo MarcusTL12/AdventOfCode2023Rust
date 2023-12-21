@@ -1,17 +1,6 @@
-use ndarray::{s, ArrayView2};
+use crate::parse_grid::parse_grid;
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
-
-fn parse_input(input: &str) -> ArrayView2<u8> {
-    let b = input.as_bytes();
-
-    let w = b.split(|&x| x == b'\n').next().unwrap().len() + 1;
-    let h = b.len() / w;
-
-    ArrayView2::from_shape((h, w), b)
-        .unwrap()
-        .slice_move(s![0..h, 0..(w - 1)])
-}
 
 fn get_galaxy_coords<
     'a,
@@ -53,7 +42,7 @@ fn get_sum_dists(coords: &[usize]) -> usize {
 }
 
 fn find_tot_dist(input: &str, expand: usize) -> usize {
-    let grid = parse_input(input);
+    let grid = parse_grid(input);
 
     let galaxy_xs = get_galaxy_coords(grid.columns().into_iter(), expand);
     let galaxy_ys = get_galaxy_coords(grid.rows().into_iter(), expand);

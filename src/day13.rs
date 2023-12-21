@@ -1,17 +1,8 @@
-use ndarray::{s, Array2, ArrayView2};
+use ndarray::{Array2, ArrayView2};
+
+use crate::parse_grid::parse_grid;
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
-
-fn parse_input(input: &str) -> ArrayView2<u8> {
-    let b = input.as_bytes();
-
-    let w = b.split(|&x| x == b'\n').next().unwrap().len() + 1;
-    let h = b.len() / w;
-
-    ArrayView2::from_shape((h, w), b)
-        .unwrap()
-        .slice_move(s![0..h, 0..(w - 1)])
-}
 
 fn has_mirror_at(grid: ArrayView2<u8>, mut i: usize) -> bool {
     let (h, _) = grid.dim();
@@ -36,7 +27,7 @@ fn find_mirror_plane(grid: ArrayView2<u8>) -> Option<usize> {
 fn part1(input: &str) {
     let ans: usize = input
         .split_inclusive("\n\n")
-        .map(parse_input)
+        .map(parse_grid)
         .map(|grid| {
             let a = find_mirror_plane(grid);
             let b = find_mirror_plane(grid.reversed_axes());
@@ -50,19 +41,6 @@ fn part1(input: &str) {
         .sum();
 
     println!("{ans}");
-}
-
-fn parse_input_mut(input: &str) -> Array2<u8> {
-    let b = input.as_bytes();
-
-    let w = b.split(|&x| x == b'\n').next().unwrap().len() + 1;
-    let h = b.len() / w;
-
-    let b = b[0..w * h].to_vec();
-
-    Array2::from_shape_vec((h, w), b)
-        .unwrap()
-        .slice_move(s![0..h, 0..(w - 1)])
 }
 
 fn find_mirror_plane_exclude(
@@ -111,7 +89,7 @@ fn look_for_smudge(mut grid: Array2<u8>) -> usize {
 fn part2(input: &str) {
     let ans: usize = input
         .split_inclusive("\n\n")
-        .map(parse_input_mut)
+        .map(|chunk| parse_grid(chunk).to_owned())
         .map(look_for_smudge)
         .sum();
 

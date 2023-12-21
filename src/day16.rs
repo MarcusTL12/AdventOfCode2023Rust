@@ -1,17 +1,8 @@
-use ndarray::{s, Array2, ArrayView2};
+use ndarray::{Array2, ArrayView2};
+
+use crate::parse_grid::parse_grid;
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
-
-fn parse_input(input: &str) -> ArrayView2<u8> {
-    let b = input.as_bytes();
-
-    let w = b.split(|&x| x == b'\n').next().unwrap().len() + 1;
-    let h = b.len() / w;
-
-    ArrayView2::from_shape((h, w), b)
-        .unwrap()
-        .slice_move(s![0..h, 0..(w - 1)])
-}
 
 fn shift_pos([y, x]: [usize; 2], dir: usize) -> [usize; 2] {
     match dir {
@@ -73,7 +64,7 @@ fn find_energized(
 }
 
 fn part1(input: &str) {
-    let grid = parse_input(input);
+    let grid = parse_grid(input);
     let mut energized = Array2::from_elem(grid.dim(), 0);
 
     find_energized(grid, &mut energized, [0, 0], 0);
@@ -84,7 +75,7 @@ fn part1(input: &str) {
 }
 
 fn part2(input: &str) {
-    let grid = parse_input(input);
+    let grid = parse_grid(input);
     let (h, w) = grid.dim();
     let mut energized = Array2::from_elem(grid.dim(), 0);
 

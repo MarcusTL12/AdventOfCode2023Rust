@@ -15,8 +15,9 @@ mod day16;
 mod day17;
 mod day18;
 mod day19;
-mod day20;
 mod day2;
+mod day20;
+mod day21;
 mod day3;
 mod day4;
 mod day5;
@@ -24,6 +25,8 @@ mod day6;
 mod day7;
 mod day8;
 mod day9;
+
+mod parse_grid;
 
 fn main() {
     let funcs = [
@@ -47,6 +50,7 @@ fn main() {
         day18::PARTS,
         day19::PARTS,
         day20::PARTS,
+        day21::PARTS,
     ];
     let mut args = std::env::args();
     args.next();

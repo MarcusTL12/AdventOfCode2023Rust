@@ -8,18 +8,9 @@ use ndarray::{
     s, ArrayView2, ArrayViewMut1, ArrayViewMut2, Axis,
 };
 
+use crate::parse_grid::parse_grid;
+
 pub const PARTS: [fn(&str); 2] = [part1, part2];
-
-fn parse_input_mut(input: &mut str) -> ArrayViewMut2<u8> {
-    let b = unsafe { input.as_bytes_mut() };
-
-    let w = b.split(|&x| x == b'\n').next().unwrap().len() + 1;
-    let h = b.len() / w;
-
-    ArrayViewMut2::from_shape((h, w), b)
-        .unwrap()
-        .slice_move(s![0..h, 0..(w - 1)])
-}
 
 fn fall_up_col(mut col: ArrayViewMut1<u8>) {
     let mut n = 0;
@@ -62,9 +53,7 @@ fn calc_load(grid: ArrayView2<u8>) -> usize {
 }
 
 fn part1(input: &str) {
-    let mut input = input.to_owned();
-
-    let mut grid = parse_input_mut(&mut input);
+    let mut grid = parse_grid(input).to_owned();
 
     fall_up(grid.view_mut());
 
@@ -87,9 +76,7 @@ fn calculate_hash<T: Hash>(t: &T) -> u64 {
 }
 
 fn part2(input: &str) {
-    let mut input = input.to_owned();
-
-    let mut grid = parse_input_mut(&mut input);
+    let mut grid = parse_grid(input).to_owned();
 
     let mut seen = HashMap::new();
 

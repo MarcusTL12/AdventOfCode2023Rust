@@ -1,20 +1,11 @@
 use arrayvec::ArrayVec;
-use ndarray::{s, Array2, ArrayView2};
+use ndarray::{Array2, ArrayView2};
+
+use crate::parse_grid::parse_grid;
 
 pub const PARTS: [fn(&str); 2] = [part1, part2];
 
 const DIRS: [[isize; 2]; 4] = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-
-fn parse_input(input: &str) -> ArrayView2<u8> {
-    let b = input.as_bytes();
-
-    let w = b.split(|&x| x == b'\n').next().unwrap().len() + 1;
-    let h = b.len() / w;
-
-    ArrayView2::from_shape((h, w), b)
-        .unwrap()
-        .slice_move(s![0..h, 0..(w - 1)])
-}
 
 fn connections(c: u8) -> [[isize; 2]; 2] {
     match c {
@@ -50,7 +41,7 @@ fn do_step(
 }
 
 fn part1(input: &str) {
-    let grid = parse_input(input);
+    let grid = parse_grid(input);
 
     let [sy, sx] = find_start(&grid);
 
@@ -88,7 +79,7 @@ fn rot_dir(d: [isize; 2]) -> [isize; 2] {
 }
 
 fn part2(input: &str) {
-    let grid = parse_input(input);
+    let grid = parse_grid(input);
 
     let mut pos = find_start(&grid);
     let [sy, sx] = &pos;
