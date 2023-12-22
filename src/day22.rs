@@ -125,9 +125,7 @@ fn build_tree<const N: usize>(
 fn part1(input: &str) {
     let mut bricks = parse_input(input);
     let mut occ = get_occupancy_grid(&bricks);
-
     fall(&mut bricks, occ.view_mut());
-
     let tree = build_tree::<4>(&bricks, occ.view());
 
     let ans = tree
@@ -138,4 +136,48 @@ fn part1(input: &str) {
     println!("{ans}");
 }
 
-fn part2(_input: &str) {}
+fn count_falling<const N: usize>(
+    standing: &mut [bool],
+    tree: &[[ArrayVec<usize, N>; 2]],
+    i: usize,
+) -> usize {
+    assert_eq!(standing.len(), tree.len());
+
+    if standing[i] {
+        standing[i] = false;
+
+        let [_, above] = &tree[i];
+
+        let mut n = 0;
+
+        for &j in above {
+            if standing[j]
+                && tree[j][0].iter().filter(|&&k| standing[k]).count() == 0
+            {
+                n += 1 + count_falling(standing, tree, j);
+            }
+        }
+
+        n
+    } else {
+        0
+    }
+}
+
+fn part2(input: &str) {
+    let mut bricks = parse_input(input);
+    let mut occ = get_occupancy_grid(&bricks);
+    fall(&mut bricks, occ.view_mut());
+    let tree = build_tree::<4>(&bricks, occ.view());
+
+    let mut standing = vec![true; tree.len()];
+
+    let ans: usize = (0..tree.len())
+        .map(|i| {
+            standing.fill(true);
+            count_falling(&mut standing, &tree, i)
+        })
+        .sum();
+
+    println!("{ans}");
+}
