@@ -7,13 +7,14 @@ pub const PARTS: [fn(&str); 2] = [part1, part2];
 
 const DIRS: [[isize; 2]; 4] = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 
-fn build_graph1(
+fn build_graph<const N: usize>(
     grid: ArrayView2<u8>,
     mut visited: ArrayViewMut2<bool>,
-    nodes: &mut Vec<([usize; 2], ArrayVec<[usize; 2], 4>)>,
+    nodes: &mut Vec<([usize; 2], ArrayVec<[usize; 2], N>)>,
     pos: [usize; 2],
     mut prev_node: usize,
     mut dist_from_prev_node: usize,
+    check_open_fn: impl Fn(Option<u8>, usize) -> bool + Copy,
 ) {
     if let (Some(i), Some(node)) = (
         nodes
@@ -60,27 +61,23 @@ fn build_graph1(
                 (pos[1] as isize + dx) as usize,
             ];
 
-            if let (Some(b'.'), _)
-            | (Some(b'v'), 0)
-            | (Some(b'^'), 1)
-            | (Some(b'>'), 2)
-            | (Some(b'<'), 3) = (grid.get(npos), i)
-            {
-                build_graph1(
+            if check_open_fn(grid.get(npos).cloned(), i) {
+                build_graph(
                     grid,
                     visited.view_mut(),
                     nodes,
                     npos,
                     prev_node,
                     dist_from_prev_node + 1,
+                    check_open_fn,
                 );
             }
         }
     }
 }
 
-fn dfs_max(
-    nodes: &[([usize; 2], ArrayVec<[usize; 2], 4>)],
+fn dfs_max<const N: usize>(
+    nodes: &[([usize; 2], ArrayVec<[usize; 2], N>)],
     visited: &mut [bool],
     target: usize,
     curnode: usize,
@@ -116,7 +113,24 @@ fn part1(input: &str) {
     let mut visited = Array2::from_shape_simple_fn(grid.dim(), || false);
     let mut nodes = Vec::new();
 
-    build_graph1(grid, visited.view_mut(), &mut nodes, [0, 1], 0, 0);
+    build_graph::<4>(
+        grid,
+        visited.view_mut(),
+        &mut nodes,
+        [0, 1],
+        0,
+        0,
+        |c, i| {
+            matches!(
+                (c, i),
+                (Some(b'.'), _)
+                    | (Some(b'v'), 0)
+                    | (Some(b'^'), 1)
+                    | (Some(b'>'), 2)
+                    | (Some(b'<'), 3)
+            )
+        },
+    );
 
     let (h, w) = grid.dim();
 
@@ -133,4 +147,47 @@ fn part1(input: &str) {
     println!("{ans}");
 }
 
-fn part2(_input: &str) {}
+fn complete_graph<const N: usize>(
+    nodes: &mut [([usize; 2], ArrayVec<[usize; 2], N>)],
+) {
+    for i in 0..nodes.len() {
+        for [j, dist] in nodes[i].1.clone() {
+            let k = [i, dist];
+            if !nodes[j].1.contains(&k) {
+                nodes[j].1.push(k);
+            }
+        }
+    }
+}
+
+fn part2(input: &str) {
+    let grid = parse_grid(input);
+    let mut visited = Array2::from_shape_simple_fn(grid.dim(), || false);
+    let mut nodes = Vec::new();
+
+    build_graph::<8>(
+        grid,
+        visited.view_mut(),
+        &mut nodes,
+        [0, 1],
+        0,
+        0,
+        |c, _| c.unwrap_or(b'#') != b'#',
+    );
+
+    complete_graph(&mut nodes);
+
+    let (h, w) = grid.dim();
+
+    let target = nodes
+        .iter()
+        .enumerate()
+        .find_map(|(i, &(pos, _))| (pos == [h - 1, w - 2]).then_some(i))
+        .unwrap();
+
+    let n_nodes = nodes.len();
+
+    let ans = dfs_max(&mut nodes, &mut vec![false; n_nodes], target, 0, 0);
+
+    println!("{ans}");
+}
