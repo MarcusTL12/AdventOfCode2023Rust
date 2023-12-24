@@ -54,8 +54,7 @@ fn build_graph<const N: usize>(
             prev_node = next_node_ind;
         }
 
-        for i in 0..4 {
-            let [dy, dx] = DIRS[i];
+        for (i, [dy, dx]) in DIRS.iter().enumerate() {
             let npos = [
                 (pos[0] as isize + dy) as usize,
                 (pos[1] as isize + dx) as usize,
@@ -142,7 +141,7 @@ fn part1(input: &str) {
 
     let n_nodes = nodes.len();
 
-    let ans = dfs_max(&mut nodes, &mut vec![false; n_nodes], target, 0, 0);
+    let ans = dfs_max(&nodes, &mut vec![false; n_nodes], target, 0, 0);
 
     println!("{ans}");
 }
@@ -187,7 +186,7 @@ fn part2(input: &str) {
 
     let n_nodes = nodes.len();
 
-    let ans = dfs_max(&mut nodes, &mut vec![false; n_nodes], target, 0, 0);
+    let ans = dfs_max(&nodes, &mut vec![false; n_nodes], target, 0, 0);
 
     println!("{ans}");
 }
